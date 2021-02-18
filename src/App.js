@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Header from './components/Header'
 import Characters from './components/Characters'
@@ -12,7 +11,6 @@ function App() {
       <div className={darkMode ? "App App-dark" : "App"}>
         <Header/>
         <Characters/>
-        <h1>Hola Mundo</h1>
       </div>
     </ThemeContext.Provider>
   );
