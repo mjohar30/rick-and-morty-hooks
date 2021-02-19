@@ -1,9 +1,7 @@
 import React, { useState, useReducer, useMemo, useRef, useCallback } from 'react';
-import Emoji from '../Emoji'
 import Search from '../Search/Search';
+import CharacterCard from '../CharacterCard/CharacterCard';
 import useCharacters from '../../hooks/useCharacters'
-import { ReactComponent as FavoriteIcon } from '../../images/favorite.svg'
-import { ReactComponent as FavoriteBorderIcon } from '../../images/favorite_border.svg'
 import './characters.css'
 
 const API = 'https://rickandmortyapi.com/api/character/'
@@ -17,7 +15,12 @@ const favoriteReducer = (state, action) => {
       return {
         ...state,
         favorites: [...state.favorites, action.payload]
-      }  
+      }
+    case 'REMOVE_FAVORITE':
+      return {
+        ...state, 
+        favorites: state.favorites.filter(favorite => favorite.id !== action.payload.id)
+      }
     default:
       return state
   }
@@ -30,8 +33,9 @@ const Characters = () => {
 
   const characters = useCharacters(API)
 
-  const handleClick = favorite => {
-    dispatch({type: 'ADD_TO_FAVORITE', payload: favorite})
+  const handleClick = favorite => { 
+    let type = favorites.favorites.some(value => value.id === favorite.id) ? 'REMOVE_FAVORITE' : 'ADD_TO_FAVORITE'
+    dispatch({type, payload: favorite})
   }
 
   // const handleSearch = () => {
@@ -62,7 +66,7 @@ const Characters = () => {
         {favorites.favorites.length > 0 && <h1>Favorite Characters</h1>}
         {favorites.favorites.map(favorite => (
           <>
-          <li key={favorite.id}>
+          <li key={`favorite-${favorite.id}`}>
             {favorite.name}
           </li>
           </>
@@ -71,38 +75,7 @@ const Characters = () => {
       <Search search={search} searchInput={searchInput} handleSearch={handleSearch}/>
       <section className="characters">
         {filteredUsers.map(character => (
-          <div className="character" key={character.id}>
-            <h2>{character.name}</h2>
-            <div>
-              <img src={character.image} alt={character.name} />
-              <div className="hidden-container">
-                <div className="hidden-text">
-                  <span style={{fontWeight: 'bold'}}>Status: </span>
-                  {character.status === 'Dead' ? <Emoji symbol="💀" label="dead"/>
-                  : character.status === 'Alive' ? <Emoji symbol="👌" label="alive"/>
-                  : <Emoji symbol="❓" label="unknown"/>}
-                  {character.status}
-                </div>
-                <div className="hidden-text">
-                  <span style={{fontWeight: 'bold'}}>Gender: </span>
-                  {character.gender}
-                </div>
-                <div className="hidden-text">
-                  <span style={{fontWeight: 'bold'}}>Species: </span>
-                  {character.species}
-                </div>
-                <div className="hidden-text">
-                  <span style={{fontWeight: 'bold'}}>Location: </span>
-                  {character.origin.name}
-                </div>
-              </div>
-            </div>
-            {favorites.favorites.some(favorite => favorite.id === character.id) ?
-            <FavoriteIcon className="favorite_icon favourite_icon_selected" onClick={() => handleClick(character)}/>
-            :
-            <FavoriteBorderIcon className="favorite_icon" onClick={() => handleClick(character)}/>
-            }
-          </div>
+          <CharacterCard character={character} favorites={favorites.favorites} handleClick={handleClick}/>
         ))}
       </section>
     </>
