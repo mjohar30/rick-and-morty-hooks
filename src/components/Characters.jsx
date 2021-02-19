@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useReducer, useMemo, useRef } from 'react';
-import './characters.css'
+import React, { useState, useReducer, useMemo, useRef, useCallback } from 'react';
+import Search from './Search';
+import useCharacters from '../hooks/useCharacters'
 import { ReactComponent as FavoriteIcon } from '../images/favorite.svg'
 import { ReactComponent as FavoriteBorderIcon } from '../images/favorite_border.svg'
+import './characters.css'
 
 const Emoji = props => (
   <span
@@ -18,6 +20,8 @@ const initialState = {
   favorites: []
 }
 
+const API = 'https://rickandmortyapi.com/api/character/'
+
 const favoriteReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_FAVORITE':
@@ -31,24 +35,26 @@ const favoriteReducer = (state, action) => {
 }
 
 const Characters = () => {
-  const [characters, setCharacters] = useState([])
   const [favorites, dispatch] = useReducer(favoriteReducer, initialState)
   const [search, setSearch] = useState('')
   const searchInput = useRef(null)
 
-  useEffect(() => {
-    fetch('https://rickandmortyapi.com/api/character/')
-      .then(response => response.json())
-      .then(data => setCharacters(data.results))
-  }, [])
+  const characters = useCharacters(API)
 
   const handleClick = favorite => {
     dispatch({type: 'ADD_TO_FAVORITE', payload: favorite})
   }
 
-  const handleSearch = () => {
-    setSearch(searchInput.current.value)
-  }
+  // const handleSearch = () => {
+  //   setSearch(searchInput.current.value)
+  // }
+
+  const handleSearch = useCallback(
+    () => {
+      setSearch(searchInput.current.value)
+    },
+    [],
+  );
 
   // const filteredUsers = characters.filter(user => {
   //   return user.name.toLowerCase().includes(search.toLowerCase())
@@ -73,9 +79,7 @@ const Characters = () => {
           </>
         ))}
       </div>
-      <div className="Search">
-        <input type="text" value={search} ref={searchInput} onChange={handleSearch}/>
-      </div>
+      <Search search={search} searchInput={searchInput} handleSearch={handleSearch}/>
       <div className="characters">
         {filteredUsers.map(character => (
           <div className="character" key={character.id}>
