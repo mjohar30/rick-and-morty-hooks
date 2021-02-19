@@ -1,26 +1,15 @@
 import React, { useState, useReducer, useMemo, useRef, useCallback } from 'react';
-import Search from './Search';
-import useCharacters from '../hooks/useCharacters'
-import { ReactComponent as FavoriteIcon } from '../images/favorite.svg'
-import { ReactComponent as FavoriteBorderIcon } from '../images/favorite_border.svg'
+import Emoji from '../Emoji'
+import Search from '../Search/Search';
+import useCharacters from '../../hooks/useCharacters'
+import { ReactComponent as FavoriteIcon } from '../../images/favorite.svg'
+import { ReactComponent as FavoriteBorderIcon } from '../../images/favorite_border.svg'
 import './characters.css'
 
-const Emoji = props => (
-  <span
-    className="emoji"
-    role="img"
-    aria-label={props.label ? props.label : ""}
-    aria-hidden={props.label ? "false" : "true"}
-  >
-    {props.symbol}
-  </span>
-);
-
+const API = 'https://rickandmortyapi.com/api/character/'
 const initialState = {
   favorites: []
 }
-
-const API = 'https://rickandmortyapi.com/api/character/'
 
 const favoriteReducer = (state, action) => {
   switch (action.type) {
@@ -69,7 +58,7 @@ const Characters = () => {
 
   return (
     <>
-      <div className="favorite_characters">
+      <section className="favorite_characters">
         {favorites.favorites.length > 0 && <h1>Favorite Characters</h1>}
         {favorites.favorites.map(favorite => (
           <>
@@ -78,9 +67,9 @@ const Characters = () => {
           </li>
           </>
         ))}
-      </div>
+      </section>
       <Search search={search} searchInput={searchInput} handleSearch={handleSearch}/>
-      <div className="characters">
+      <section className="characters">
         {filteredUsers.map(character => (
           <div className="character" key={character.id}>
             <h2>{character.name}</h2>
@@ -115,7 +104,7 @@ const Characters = () => {
             }
           </div>
         ))}
-      </div>
+      </section>
     </>
   );
 };
