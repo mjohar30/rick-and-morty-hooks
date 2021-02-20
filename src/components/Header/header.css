@@ -1,4 +1,28 @@
+.header {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+}
 .header_title{
     margin: 0px;
     padding: 10px;
+    grid-column-start: 2;
+}
+.header_options{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.header_badge{
+    padding: 0.3em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #1779ba;
+    text-align: center;
+    color: #fefefe;
+    font-size: 13px;
+    display: inline-block;
+    min-width: 1em;
+    margin-right: 8px;
 }

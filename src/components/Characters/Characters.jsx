@@ -1,33 +1,14 @@
-import React, { useState, useReducer, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useReducer, useMemo, useRef, useCallback, useContext } from 'react';
 import Search from '../Search/Search';
 import CharacterCard from '../CharacterCard/CharacterCard';
 import useCharacters from '../../hooks/useCharacters'
+import FavoriteContext from "../../context/FavoriteContext";
 import './characters.css'
 
 const API = 'https://rickandmortyapi.com/api/character/'
-const initialState = {
-  favorites: []
-}
-
-const favoriteReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TO_FAVORITE':
-      return {
-        ...state,
-        favorites: [...state.favorites, action.payload]
-      }
-    case 'REMOVE_FAVORITE':
-      return {
-        ...state, 
-        favorites: state.favorites.filter(favorite => favorite.id !== action.payload.id)
-      }
-    default:
-      return state
-  }
-}
 
 const Characters = () => {
-  const [favorites, dispatch] = useReducer(favoriteReducer, initialState)
+  const {favorites, dispatch} = useContext(FavoriteContext)
   const [search, setSearch] = useState('')
   const searchInput = useRef(null)
 
