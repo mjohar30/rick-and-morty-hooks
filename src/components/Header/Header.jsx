@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 import ThemeContext from "../../context/ThemeContext";
 import FavoriteContext from "../../context/FavoriteContext";
+import { ReactComponent as LightModeIcon } from '../../images/light_mode.svg'
+import { ReactComponent as DarkModeIcon } from '../../images/dark_mode.svg'
+import rickAndMortyLogo from "../../images/rick-and-morty-logo.png"
 import './header.css'
 
 const Header = () => {
@@ -13,22 +16,19 @@ const Header = () => {
 
   return (
     <header className="header">
-      <h1 className="header_title">ReactHooks/Rick and Morty API</h1>
+      <img className="header_title" src={rickAndMortyLogo} alt=""/>
+      {/* <h1 className="header_title">ReactHooks/Rick and Morty API</h1> */}
       <div className="header_options">
         <span>
           <span className="header_badge"> {favorites.favorites.length}</span>
           Favoritos
         </span>
-        <button type="button" onClick={handleClick}>
-          {darkMode ? 'Dark Mode' : 'Light Mode'}
-        </button>
+        {darkMode ? <DarkModeIcon id="dark-mode" className='mode-icon' onClick={handleClick}/>
+          : <LightModeIcon id="light-mode" className='mode-icon' onClick={handleClick}/>
+        }
       </div>
-      {/* <button type="button" onClick={() => setDarkMode(!darkMode)}>
-        {darkMode ? 'Dark Mode 2' : 'Light Mode 2'}
-      </button> */}
     </header>
   );
 };
-
 
 export default Header;
